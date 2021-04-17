@@ -49,6 +49,7 @@ module.exports = {
 				loader: 'html-loader',
 				options: {
 					minimize: !devMode,
+					esModule: false
 				},
 			},
 			{
@@ -57,10 +58,8 @@ module.exports = {
 					loader: "file-loader",
 					options: {
 						name: '[name].[ext]',
-						outputPath: (file) =>
-						{
-							return "img/" + file;
-						}
+						// publicPath: 'img',
+						outputPath: 'img'
 					}
 				}
 			},
@@ -70,11 +69,11 @@ module.exports = {
 					isHot ? 'style-loader' : {
 						loader: MiniCssExtractPlugin.loader,
 						options: {
-							publicPath: '../' // path to director where assets folder is located
+							publicPath: '../'
 						}
-					}, //3. Extract css into files
-					"css-loader", //2. Turns css into commonjs
-					'sass-loader' //1. Turns sass into css
+					},
+					"css-loader",
+					'sass-loader'
 				]
 			},
 			{
@@ -87,10 +86,10 @@ module.exports = {
 	devServer: {
 		port: 3000,
 		hot: true,
-		contentBase: path.join(__dirname, 'dist'), //for images etc
+		contentBase: path.join(__dirname, 'dist'),
 		before(app, server)
 		{
-			server._watch('src/*.html'); //refresh page on html change
+			server._watch('src/*.html');
 		}
 	}
 };

@@ -2,6 +2,7 @@
 	"name": "rect-annotate",
 	"version": "1.0.0",
 	"scripts": {
+		"start": "npm run hot",
 		"dev": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js",
 		"watch": "npm run dev -- --watch",
 		"hot": "cross-env NODE_ENV=development webpack serve",
