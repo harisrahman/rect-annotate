@@ -1,0 +1,193 @@
+
+html
+{
+	font-size:16px;
+	scroll-behavior: smooth;
+}
+
+body
+{
+	height: 100%;
+	width: 100%;
+}
+
+.container
+{
+	max-width: 1200px;
+	width: 100%;
+	padding-right: 15px;
+	padding-left: 15px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.row
+{
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.row > *
+{
+	box-sizing: border-box;
+	flex-shrink: 0;
+	width: 100%;
+	max-width: 100%;
+	padding: 0 15px;
+}
+
+.col-sm-6,
+.col-md-4,
+.col-lg-3
+{
+	padding: 0 15px;
+}
+
+.col-6
+{
+	flex: 0 0 auto;
+	width: 50%;
+}
+
+.col-sm-6
+{
+	@include small
+	{
+		flex: 0 0 auto;
+		width: 50%;
+	}
+}
+
+.col-md-4
+{
+	@include tablet
+	{
+		flex: 0 0 auto;
+		width: 33.3333333333%;
+	}
+}
+
+
+.col-lg-3
+{
+	@include desktop
+	{
+		flex: 0 0 auto;
+		width: 25%;
+	}
+}
+
+
+.col-lg-4
+{
+	@include desktop
+	{
+		flex: 0 0 auto;
+		width: 33.3333333333%;
+	}
+}
+
+.justify-content-center
+{
+	justify-content: center;
+}
+
+.mt-2
+{
+	margin-top: 2rem;
+}
+
+.mt-4
+{
+	margin-top: 4rem;
+}
+
+.mb-0
+{
+	margin-bottom: 0 !important;
+}
+
+.text-center
+{
+	text-align: center;
+}
+
+.text-muted
+{
+	color: #6c757d;
+}
+
+.text-lg
+{
+	font-size: 1.8rem;
+}
+
+.lh-lg
+{
+	line-height: 1.4;
+}
+
+.pl-2,
+.px-2
+{
+	padding-left: 1rem;
+}
+
+.pr-2,
+.px-2
+{
+	padding-right: 1rem;
+}
+
+.pt-2,
+.py-2
+{
+	padding-top: 1rem;
+}
+
+.pb-2,
+.py-2
+{
+	padding-bottom: 1rem;
+}
+
+
+.pt-6,
+.py-6
+{
+	padding-top: 3rem;
+}
+
+.pb-6,
+.py-6
+{
+	padding-bottom: 3rem;
+}
+
+
+.pb-4
+{
+	padding-bottom: 2rem;
+}
+
+
+.pt-1
+{
+	padding-top: 0.5rem;
+}
+
+.align-items-center
+{
+	align-items: center;
+}
+
+.d-none
+{
+	display: none;	
+}
+
+.img-fluid
+{
+	max-width: 100%;
+	height: auto;
+}

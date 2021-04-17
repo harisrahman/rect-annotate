@@ -1,0 +1,9 @@
+/node_modules
+/vendor
+/public/hot
+npm-debug.log
+/dist/**
+/src/img/*
+
+!.gitkeep
+!.gitignore
