@@ -53,12 +53,11 @@ module.exports = {
 				},
 			},
 			{
-				test: /\.(png|svg|jpe?g|gif)$/i,
+				test: /\.(png|svg|jpe?g|gif|ico)$/i,
 				use: {
 					loader: "file-loader",
 					options: {
 						name: '[name].[ext]',
-						// publicPath: 'img',
 						outputPath: 'img'
 					}
 				}

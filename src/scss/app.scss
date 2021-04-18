@@ -3,3 +3,14 @@
 @import "./variables";
 @import "./mixins";
 @import "./globals";
+
+canvas
+{
+	position: absolute;
+}
+
+canvas,
+img
+{
+	user-select: none;
+}
