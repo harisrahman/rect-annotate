@@ -16,6 +16,9 @@ module.exports = {
 		path: path.resolve(__dirname, 'dist'),
 		filename: 'js/app.js',
 		publicPath: '',
+		library: {
+			type: "umd"
+		}
 	},
 	resolve: {
 		extensions: [".ts", ".js"]
@@ -31,6 +34,8 @@ module.exports = {
 		new HtmlWebpackPlugin({
 			template: "src/template.html",
 			filename: "index.html",
+			inject: "head",
+			scriptLoading: "blocking",
 			minify: !devMode
 		}),
 		new MiniCssExtractPlugin({
@@ -59,6 +64,16 @@ module.exports = {
 					options: {
 						name: '[name].[ext]',
 						outputPath: 'img'
+					}
+				}
+			},
+			{
+				test: /demo.js$/i,
+				use: {
+					loader: "file-loader",
+					options: {
+						name: '[name].[ext]',
+						outputPath: 'js'
 					}
 				}
 			},

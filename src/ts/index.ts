@@ -1,6 +1,5 @@
 import "../scss/app.scss";
-import RectAnnotate from "./classes/RectAnnotate";
 
-new RectAnnotate("img");
+window["RectAnnotate" as any] = require("./classes/RectAnnotate").default;
 
 if (module && module.hot) module.hot.accept();

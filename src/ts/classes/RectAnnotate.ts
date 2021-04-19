@@ -1,7 +1,6 @@
 import Image from "./Image";
 import Canvas from "./Canvas";
-import { Config, DefaultConfig } from "../interfaces/Config";
-
+import { Config, defaultConfig } from "../interfaces/Config";
 
 class RectAnnotate
 {
@@ -10,11 +9,11 @@ class RectAnnotate
 
 	constructor(selector: string, config?: object)
 	{
-		this.config = config ? { ...DefaultConfig, config } as Config : DefaultConfig;
+		this.config = config ? { ...defaultConfig, ...config } as Config : defaultConfig;
 
 		this.loaded().then(() =>
 		{
-			this.image = new Image(selector);
+			this.image = new Image(selector, this.config);
 			new Canvas(this.image, this.config);
 		});
 	}

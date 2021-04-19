@@ -1,3 +1,5 @@
+import { Config } from "../interfaces/Config";
+
 class Image
 {
 	element: HTMLImageElement;
@@ -7,8 +9,10 @@ class Image
 	right: number;
 	height: number;
 	width: number;
+	realToViewRelativeSizeFactor: number = 1;
+	viewToRealRelativeSizeFactor: number = 1;
 
-	constructor(private selector: string)
+	constructor(private selector: string, private config: Config)
 	{
 		const element = document.querySelector(selector) as HTMLImageElement;
 
@@ -24,10 +28,24 @@ class Image
 			this.right = rect.right;
 			this.height = rect.height;
 			this.width = rect.width;
+
+			this.setRelativeSizeFactor();
 		}
 		else
 		{
 			throw "Invalid selector";
+		}
+	}
+
+	setRelativeSizeFactor()
+	{
+		if (this.config.actualImageSizeInCoords)
+		{
+			const realWidth = this.element.naturalWidth;
+			const viewWidth = this.element.width;
+
+			this.realToViewRelativeSizeFactor = realWidth / viewWidth;
+			this.viewToRealRelativeSizeFactor = viewWidth / realWidth;
 		}
 	}
 

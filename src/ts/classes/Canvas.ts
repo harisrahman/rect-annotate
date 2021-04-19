@@ -4,16 +4,14 @@ import { Config } from "../interfaces/Config";
 
 class Canvas
 {
-	ctx: CanvasRenderingContext2D;
-	canvas: HTMLCanvasElement;
+	element: HTMLCanvasElement;
 	rectangles: Rectangle[];
 	mousedown: boolean = false;
 	current_rectangle?: Rectangle;
 
-	constructor(private image: Image, private config: Config)
+	constructor(public image: Image, private config: Config)
 	{
-		this.canvas = document.createElement("canvas");
-		this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
+		this.element = document.createElement("canvas");
 		this.rectangles = [];
 
 		this.setup();
@@ -23,59 +21,70 @@ class Canvas
 	{
 		this.addCanvas();
 		this.addListeners();
+		this.addLoaded();
+	}
+
+	addLoaded()
+	{
+		if (!(this.config.load && Array.isArray(this.config.load) && this.config.load.length > 0)) return;
+
+		let rect: Rectangle;
+
+		this.config.load.forEach(element =>
+		{
+			if (element.length != 4) return;
+
+			rect = new Rectangle(...element, this, this.config, true);
+			rect.draw();
+			rect.addToArray(this.rectangles);
+		});
+
 	}
 
 	addCanvas()
 	{
-		this.canvas.width = this.image.width;
-		this.canvas.height = this.image.height;
+		this.element.width = this.image.width;
+		this.element.height = this.image.height;
 
-		this.canvas.style.top = this.image.top + "px";
-		this.canvas.style.left = this.image.left + "px";
+		this.element.style.top = this.image.top + "px";
+		this.element.style.left = this.image.left + "px";
 
-		document.querySelector("body")!.append(this.canvas);
+		document.querySelector("body")!.append(this.element);
 	}
 
 	startPosition(X: number, Y: number)
 	{
-		this.current_rectangle = new Rectangle(X, Y, X, Y, this.ctx, this.config);
+		this.current_rectangle = new Rectangle(X, Y, X, Y, this, this.config);
 	}
 
 	drag(toX: number, toY: number)
 	{
-		this.current_rectangle?.updateTo(toX, toY);
+		this.current_rectangle!.updateTo(toX, toY);
 	}
 
 	endPosition(X: number, Y: number)
 	{
 		if (this.current_rectangle)
 		{
-			if (Math.abs(this.current_rectangle.width) > 5 && Math.abs(this.current_rectangle.height) > 5)
-			{
-				this.rectangles.push(this.current_rectangle);
-			}
-			else
-			{
-				this.current_rectangle.clear();
-			}
+			this.current_rectangle.addToArray(this.rectangles);
 		}
 	}
 
 	addListeners()
 	{
-		this.canvas.addEventListener("mousedown", (e) =>
+		this.element.addEventListener("mousedown", (e) =>
 		{
 			this.mousedown = true;
 			this.startPosition(e.offsetX, e.offsetY);
 		});
 
-		this.canvas.addEventListener("mouseup", (e) =>
+		this.element.addEventListener("mouseup", (e) =>
 		{
 			this.mousedown = false;
 			this.endPosition(e.offsetX, e.offsetY);
 		});
 
-		this.canvas.addEventListener("mousemove", (e) =>
+		this.element.addEventListener("mousemove", (e) =>
 		{
 			if (this.mousedown)
 			{
@@ -89,7 +98,7 @@ class Canvas
 
 			if (clearBtn)
 			{
-				clearBtn.addEventListener("click", (e) =>
+				clearBtn.addEventListener("click", () =>
 				{
 					if (this.rectangles.length > 0)
 					{
@@ -105,7 +114,7 @@ class Canvas
 
 			if (undoBtn)
 			{
-				undoBtn.addEventListener("click", (e) =>
+				undoBtn.addEventListener("click", () =>
 				{
 					if (this.rectangles.length > 0)
 					{

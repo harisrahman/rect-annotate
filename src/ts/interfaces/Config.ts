@@ -1,14 +1,26 @@
 export interface Config
 {
 	color: string,
-	width: number,
+	strokeWidth: number,
+	minHeight: number,
+	minWidth: number,
 	clearBtn: string,
 	undoBtn: string,
+	form: string | null,
+	inputName: string,
+	actualImageSizeInCoords: boolean,
+	load: Array<[number, number, number, number]> | null
 }
 
-export const DefaultConfig: Config = {
+export const defaultConfig: Config = {
 	color: "#000",
-	width: 3,
+	strokeWidth: 3,
+	minHeight: 5,
+	minWidth: 5,
 	clearBtn: "#clearRectAnnotate",
 	undoBtn: "#undoRectAnnotate",
+	form: "#rectAnnotateForm",
+	inputName: "coords",
+	actualImageSizeInCoords: true,
+	load: null
 }
