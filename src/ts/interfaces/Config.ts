@@ -9,6 +9,7 @@ export interface Config
 	form: string | null,
 	inputName: string,
 	actualImageSizeInCoords: boolean,
+	allowOverlap: boolean,
 	load: Array<[number, number, number, number]> | null
 }
 
@@ -22,5 +23,6 @@ export const defaultConfig: Config = {
 	form: "#rectAnnotateForm",
 	inputName: "coords",
 	actualImageSizeInCoords: true,
+	allowOverlap: false,
 	load: null
 }

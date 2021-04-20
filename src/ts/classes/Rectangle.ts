@@ -19,7 +19,7 @@ class Rectangle
 	)
 	{
 		this.ctx = this.canvas.element.getContext("2d") as CanvasRenderingContext2D;
-		this.addDimensions();
+		this.takeCareOfMeasurements();
 
 		if (config.form)
 		{
@@ -27,28 +27,43 @@ class Rectangle
 		}
 	}
 
-	addDimensions(): Rectangle
+	takeCareOfMeasurements()
 	{
 		if (this.isLoadedFromConfig)
 		{
-			this.width = this.toX;
-			this.height = this.toY;
+			this.fromX = Number(this.fromX);
+			this.fromY = Number(this.fromY);
+			this.toX = Number(this.toX);
+			this.toY = Number(this.toY);
 
-			this.toX = this.fromX + this.width;
-			this.toY = this.fromY + this.height;
-
-			const coordTypes = ["fromX", "fromY", "toX", "toY", "width", "height"] as const;
-
-			coordTypes.forEach(coordType =>
-			{
-				this[coordType] = Math.round(this[coordType] * this.canvas.image.viewToRealRelativeSizeFactor);
-			});
+			this.toCoordsAreActuallyMeasurements();
 		}
 		else
 		{
-			this.width = (this.toX - this.fromX);
-			this.height = (this.toY - this.fromY);
+			this.addMeasurements();
 		}
+	}
+
+	toCoordsAreActuallyMeasurements()
+	{
+		this.width = this.toX;
+		this.height = this.toY;
+
+		this.toX = this.fromX + this.width;
+		this.toY = this.fromY + this.height;
+
+		const coordTypes = ["fromX", "fromY", "toX", "toY", "width", "height"] as const;
+
+		coordTypes.forEach(coordType =>
+		{
+			this[coordType] = Math.round(this[coordType] * this.canvas.image.viewToRealRelativeSizeFactor);
+		});
+	}
+
+	addMeasurements(): Rectangle
+	{
+		this.width = (this.toX - this.fromX);
+		this.height = (this.toY - this.fromY);
 
 		return this;
 	}
@@ -64,13 +79,24 @@ class Rectangle
 		return rectangles;
 	}
 
-	clearAll(rectangles: Rectangle[]): Rectangle[]
+	clearAll(rectangles: Rectangle[], removeFromArray: boolean = true): Rectangle[]
 	{
 		this.ctx.clearRect(0, 0, this.canvas.element.width, this.canvas.element.height);
 
 		this.removeAllFromForm();
 
-		rectangles.length = 0;
+		if (removeFromArray) rectangles.length = 0;
+
+		return rectangles;
+	}
+
+	addAll(rectangles: Rectangle[]): Rectangle[]
+	{
+		rectangles.forEach((rectangle: Rectangle, index: number) =>
+		{
+			rectangle.draw();
+			rectangle.addToForm(index);
+		});
 
 		return rectangles;
 	}
@@ -82,7 +108,7 @@ class Rectangle
 		this.toX = toX;
 		this.toY = toY;
 
-		return this.addDimensions().draw();
+		return this.addMeasurements().draw();
 	}
 
 	calculateClearCoords(): [number, number, number, number]
@@ -115,6 +141,34 @@ class Rectangle
 		}
 
 		return [fromX, fromY, width, height];
+	}
+
+	updateToNaturalCoords(): Rectangle
+	{
+		const width = this.toX - this.fromX;
+		const height = this.toY - this.fromY;
+
+		if (width < 0)
+		{
+			const newToX = this.fromX;
+
+			this.fromX = this.toX;
+			this.toX = newToX;
+
+			this.width = Math.abs(width);
+		}
+
+		if (height < 0)
+		{
+			const newToY = this.fromY;
+
+			this.fromY = this.toY;
+			this.toY = newToY;
+
+			this.height = Math.abs(height);
+		}
+
+		return this;
 	}
 
 	clear(): Rectangle
@@ -174,16 +228,49 @@ class Rectangle
 		return this;
 	}
 
+	hasOverlap(rectangles: Rectangle[]): boolean
+	{
+		let overlap = false;
+
+		rectangles.forEach((rectangle: Rectangle, i: number) =>
+		{
+			if (
+				this.fromX <= rectangle.toX &&
+				this.toX >= rectangle.fromX &&
+				this.fromY <= rectangle.toY &&
+				this.toY >= rectangle.fromY
+			)
+			{
+				overlap = true;
+			}
+		});
+
+		return overlap;
+	}
+
+	logPoints(identifier: string = "")
+	{
+		if (identifier) identifier = identifier + " : ";
+
+		console.log(`${identifier} X = ${this.fromX} => ${this.toX}, Y = ${this.fromY} => ${this.toY}, Width = ${this.width}, Height = ${this.height}`);
+	}
+
+
 	addToArray(rectangles: Rectangle[]): Rectangle[]
 	{
-		if (Math.abs(this.width) > this.config.minHeight && Math.abs(this.height) > this.config.minWidth)
+		//If smaller than minimum or rectangle overlaps then don't add/draw
+		if (Math.abs(this.width) < this.config.minHeight ||
+			Math.abs(this.height) < this.config.minWidth ||
+			(rectangles.length > 0 && this.hasOverlap(rectangles))
+		)
 		{
-			rectangles.push(this);
-			this.addToForm(rectangles.length - 1);
+			this.clearAll(rectangles, false);
+			this.addAll(rectangles);
 		}
 		else
 		{
-			this.clear();
+			rectangles.push(this);
+			this.addToForm(rectangles.length - 1);
 		}
 
 		return rectangles;

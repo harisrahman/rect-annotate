@@ -66,7 +66,7 @@ class Canvas
 	{
 		if (this.current_rectangle)
 		{
-			this.current_rectangle.addToArray(this.rectangles);
+			this.current_rectangle.updateToNaturalCoords().addToArray(this.rectangles);
 		}
 	}
 
