@@ -25,9 +25,16 @@ module.exports = {
 	},
 	devtool: devMode ? "eval-source-map" : "source-map",
 	optimization: {
+		minimize: !devMode,
 		minimizer: [
 			new OptimizeCssAssetsPlugin(),
-			new TerserPlugin()
+			new TerserPlugin({
+				terserOptions: {
+					mangle: true,
+					keep_fnames: false,
+					keep_classnames: false
+				},
+			}),
 		]
 	},
 	plugins: [
