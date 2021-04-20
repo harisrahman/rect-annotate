@@ -14,7 +14,7 @@ module.exports = {
 	entry: './src/ts/index.ts',
 	output: {
 		path: path.resolve(__dirname, 'dist'),
-		filename: 'js/app.js',
+		filename: 'js/rect-annotate.js',
 		publicPath: '',
 		library: {
 			type: "umd"
@@ -39,7 +39,7 @@ module.exports = {
 			minify: !devMode
 		}),
 		new MiniCssExtractPlugin({
-			filename: 'css/app.css',
+			filename: 'css/rect-annotate.css',
 		}),
 		new webpack.HotModuleReplacementPlugin(),
 		new CleanWebpackPlugin({
