@@ -11,6 +11,7 @@ class RectAnnotate
 	{
 		this.config = config ? { ...defaultConfig, ...config } as Config : defaultConfig;
 
+		// Only when dom has been loaded we do our stuff, to avoid 0 width and height of image element, and  other such problems
 		this.loaded().then(() =>
 		{
 			this.image = new Image(selector, this.config);
@@ -28,8 +29,6 @@ class RectAnnotate
 			});
 		});
 	}
-
-
 }
 
 export default RectAnnotate;

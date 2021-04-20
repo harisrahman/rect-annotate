@@ -24,6 +24,7 @@ class Canvas
 		this.addLoaded();
 	}
 
+	// Rectangles added from load option in config object
 	addLoaded()
 	{
 		if (!(this.config.load && Array.isArray(this.config.load) && this.config.load.length > 0)) return;
@@ -41,6 +42,7 @@ class Canvas
 
 	}
 
+	// Canvas is made of same dimensions as image and added body 
 	addCanvas()
 	{
 		this.element.width = this.image.width;
@@ -123,8 +125,6 @@ class Canvas
 				});
 			}
 		}
-
-
 	}
 
 }

@@ -19,7 +19,7 @@ class Rectangle
 	)
 	{
 		this.ctx = this.canvas.element.getContext("2d") as CanvasRenderingContext2D;
-		this.takeCareOfMeasurements();
+		this.adaptMeasurementsAndCoords();
 
 		if (config.form)
 		{
@@ -27,7 +27,7 @@ class Rectangle
 		}
 	}
 
-	takeCareOfMeasurements()
+	adaptMeasurementsAndCoords()
 	{
 		if (this.isLoadedFromConfig)
 		{
@@ -143,6 +143,9 @@ class Rectangle
 		return [fromX, fromY, width, height];
 	}
 
+	// When a rectangle is done in reverse from left to right, width and height are caluclated to be negetive,
+	// and to coords are actually from coords and vice versa. So these are corrected as other functions don't
+	// expect this to happen
 	updateToNaturalCoords(): Rectangle
 	{
 		const width = this.toX - this.fromX;
@@ -228,6 +231,7 @@ class Rectangle
 		return this;
 	}
 
+	// Current (this) rectangle overlaps with any of the rectangles given in array
 	hasOverlap(rectangles: Rectangle[]): boolean
 	{
 		let overlap = false;
@@ -248,6 +252,7 @@ class Rectangle
 		return overlap;
 	}
 
+	// Logger
 	logPoints(identifier: string = "")
 	{
 		if (identifier) identifier = identifier + " : ";
@@ -258,12 +263,13 @@ class Rectangle
 
 	addToArray(rectangles: Rectangle[]): Rectangle[]
 	{
-		//If smaller than minimum or rectangle overlaps then don't add/draw
+		// If smaller than minimum or rectangle overlaps then don't add/draw
 		if (Math.abs(this.width) < this.config.minHeight ||
 			Math.abs(this.height) < this.config.minWidth ||
 			(rectangles.length > 0 && this.hasOverlap(rectangles))
 		)
 		{
+			// Clearing and adding again to avoid broken (cut) rectangles
 			this.clearAll(rectangles, false);
 			this.addAll(rectangles);
 		}
