@@ -48,8 +48,8 @@ class Canvas
 		this.element.width = Math.round(this.image.width);
 		this.element.height = Math.round(this.image.height);
 
-		this.element.style.top = this.image.top + "px";
-		this.element.style.left = this.image.left + "px";
+		this.element.style.top = Math.round(this.image.top) + "px";
+		this.element.style.left = Math.round(this.image.left) + "px";
 
 		document.querySelector("body")!.append(this.element);
 	}
@@ -96,27 +96,42 @@ class Canvas
 
 		new ResizeObserver((entries: ResizeObserverEntry[]) =>
 		{
-			const imgVpWidth: number = Math.round(entries[0].contentRect.width);
-			const imgVpHeight: number = Math.round(entries[0].contentRect.height);
+			const rect = entries[0].target.getBoundingClientRect()
+
+			const imgVpWidth: number = Math.round(rect.width);
+			const imgVpHeight: number = Math.round(rect.height);
+			const imgVpLeft: number = Math.round(rect.left);
+			const imgVpTop: number = Math.round(rect.top);
 			let changed: boolean = false;
 
-			if (imgVpWidth != this.element.width)
+			if (imgVpWidth != Math.round(this.element.width))
 			{
 				this.element.width = imgVpWidth;
 				changed = true;
 			}
-			if (imgVpHeight != this.element.height)
+
+			if (imgVpHeight != Math.round(this.element.height))
 			{
 				this.element.height = imgVpHeight;
 				changed = true;
 			}
 
-			if (changed && this.rectangles.length)
+			if (imgVpLeft != Math.round(Number(this.element.style.left)))
 			{
+				this.element.style.left = imgVpLeft + "px";
+				changed = true;
+			}
 
+			if (imgVpTop != Math.round(Number(this.element.style.top)))
+			{
+				this.element.style.top = imgVpTop + "px";
+				changed = true;
+			}
+
+			if (changed && Math.round(this.rectangles.length))
+			{
 				const oldViewToRealRelativeSizeFactor: number = this.image.viewToRealRelativeSizeFactor;
 				this.image.setRelativeSizeFactor();
-
 
 				this.rectangles[0].vpChanged(this.rectangles, oldViewToRealRelativeSizeFactor);
 			}
