@@ -38,7 +38,7 @@ class Image
 	}
 
 	// Actual mage size relative to size currently showing on viewport and vice versa 
-	setRelativeSizeFactor()
+	setRelativeSizeFactor(): Image
 	{
 		if (this.config.actualImageSizeInCoords)
 		{
@@ -48,6 +48,8 @@ class Image
 			this.realToViewRelativeSizeFactor = realWidth / viewWidth;
 			this.viewToRealRelativeSizeFactor = viewWidth / realWidth;
 		}
+
+		return this;
 	}
 
 }

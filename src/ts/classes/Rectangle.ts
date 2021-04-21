@@ -7,6 +7,7 @@ class Rectangle
 	public width!: number;
 	private ctx: CanvasRenderingContext2D;
 	private form?: HTMLFormElement;
+	private coordTypes = ["fromX", "fromY", "toX", "toY", "width", "height"] as const;
 
 	constructor(
 		public fromX: number,
@@ -52,11 +53,9 @@ class Rectangle
 		this.toX = this.fromX + this.width;
 		this.toY = this.fromY + this.height;
 
-		const coordTypes = ["fromX", "fromY", "toX", "toY", "width", "height"] as const;
-
-		coordTypes.forEach(coordType =>
+		this.coordTypes.forEach(coordType =>
 		{
-			this[coordType] = Math.round(this[coordType] * this.canvas.image.viewToRealRelativeSizeFactor);
+			this[coordType] = this[coordType] * this.canvas.image.viewToRealRelativeSizeFactor;
 		});
 	}
 
@@ -79,23 +78,23 @@ class Rectangle
 		return rectangles;
 	}
 
-	clearAll(rectangles: Rectangle[], removeFromArray: boolean = true): Rectangle[]
+	clearAll(rectangles: Rectangle[], removeFromArray: boolean = true, removeFromForm: boolean = true): Rectangle[]
 	{
 		this.ctx.clearRect(0, 0, this.canvas.element.width, this.canvas.element.height);
 
-		this.removeAllFromForm();
+		if (removeFromForm) this.removeAllFromForm();
 
 		if (removeFromArray) rectangles.length = 0;
 
 		return rectangles;
 	}
 
-	addAll(rectangles: Rectangle[]): Rectangle[]
+	addAll(rectangles: Rectangle[], addToForm: boolean = true): Rectangle[]
 	{
 		rectangles.forEach((rectangle: Rectangle, index: number) =>
 		{
 			rectangle.draw();
-			rectangle.addToForm(index);
+			if (addToForm) rectangle.addToForm(index);
 		});
 
 		return rectangles;
@@ -279,6 +278,22 @@ class Rectangle
 			this.addToForm(rectangles.length - 1);
 		}
 
+		return rectangles;
+	}
+
+	//Viewport changed so adapt 
+	vpChanged(rectangles: Rectangle[], oldViewToRealRelativeSizeFactor: number): Rectangle[]
+	{
+		rectangles.forEach(rectangle =>
+		{
+			this.coordTypes.forEach(coordType =>
+			{
+				rectangle[coordType] = (rectangle[coordType] * this.canvas.image.viewToRealRelativeSizeFactor) / oldViewToRealRelativeSizeFactor;
+			});
+		});
+
+		this.clearAll(rectangles, false, false);
+		this.addAll(rectangles, false);
 		return rectangles;
 	}
 }

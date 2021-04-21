@@ -45,8 +45,8 @@ class Canvas
 	// Canvas is made of same dimensions as image and added body 
 	addCanvas()
 	{
-		this.element.width = this.image.width;
-		this.element.height = this.image.height;
+		this.element.width = Math.round(this.image.width);
+		this.element.height = Math.round(this.image.height);
 
 		this.element.style.top = this.image.top + "px";
 		this.element.style.left = this.image.left + "px";
@@ -93,6 +93,34 @@ class Canvas
 				this.drag(e.offsetX, e.offsetY);
 			}
 		});
+
+		new ResizeObserver((entries: ResizeObserverEntry[]) =>
+		{
+			const imgVpWidth: number = Math.round(entries[0].contentRect.width);
+			const imgVpHeight: number = Math.round(entries[0].contentRect.height);
+			let changed: boolean = false;
+
+			if (imgVpWidth != this.element.width)
+			{
+				this.element.width = imgVpWidth;
+				changed = true;
+			}
+			if (imgVpHeight != this.element.height)
+			{
+				this.element.height = imgVpHeight;
+				changed = true;
+			}
+
+			if (changed && this.rectangles.length)
+			{
+
+				const oldViewToRealRelativeSizeFactor: number = this.image.viewToRealRelativeSizeFactor;
+				this.image.setRelativeSizeFactor();
+
+
+				this.rectangles[0].vpChanged(this.rectangles, oldViewToRealRelativeSizeFactor);
+			}
+		}).observe(this.image.element);
 
 		if (this.config.clearBtn)
 		{
