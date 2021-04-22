@@ -48,10 +48,11 @@ class Canvas
 		this.element.width = Math.round(this.image.width);
 		this.element.height = Math.round(this.image.height);
 
-		this.element.style.top = Math.round(this.image.top) + "px";
-		this.element.style.left = Math.round(this.image.left) + "px";
-
-		document.querySelector("body")!.append(this.element);
+		const wrapper = document.createElement('div');
+		wrapper.className = "rect-annotate-wrapper";
+		this.image.element.parentNode!.insertBefore(wrapper, this.image.element);
+		wrapper.appendChild(this.image.element);
+		wrapper.append(this.element);
 	}
 
 	startPosition(X: number, Y: number)
@@ -100,8 +101,6 @@ class Canvas
 
 			const imgVpWidth: number = Math.round(rect.width);
 			const imgVpHeight: number = Math.round(rect.height);
-			const imgVpLeft: number = Math.round(rect.left);
-			const imgVpTop: number = Math.round(rect.top);
 			let changed: boolean = false;
 
 			if (imgVpWidth != Math.round(this.element.width))
@@ -113,18 +112,6 @@ class Canvas
 			if (imgVpHeight != Math.round(this.element.height))
 			{
 				this.element.height = imgVpHeight;
-				changed = true;
-			}
-
-			if (imgVpLeft != Math.round(Number(this.element.style.left)))
-			{
-				this.element.style.left = imgVpLeft + "px";
-				changed = true;
-			}
-
-			if (imgVpTop != Math.round(Number(this.element.style.top)))
-			{
-				this.element.style.top = imgVpTop + "px";
 				changed = true;
 			}
 

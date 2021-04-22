@@ -4,13 +4,21 @@
 @import "./mixins";
 @import "./globals";
 
-canvas
+.rect-annotate-wrapper
 {
-	position: absolute;
+	position: relative;
+
+	canvas
+	{
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+	
+	canvas,
+	img
+	{
+		user-select: none;
+	}
 }
 
-canvas,
-img
-{
-	user-select: none;
-}
