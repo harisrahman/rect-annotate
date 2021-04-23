@@ -10,6 +10,7 @@ export interface Config
 	inputName: string,
 	actualImageSizeInCoords: boolean,
 	allowOverlap: boolean,
+	keyboardShortcuts: boolean,
 	load: Array<[number, number, number, number]> | null
 }
 
@@ -24,5 +25,6 @@ export const defaultConfig: Config = {
 	inputName: "coords",
 	actualImageSizeInCoords: true,
 	allowOverlap: false,
+	keyboardShortcuts: true,
 	load: null
 }

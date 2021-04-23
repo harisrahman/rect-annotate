@@ -73,6 +73,22 @@ class Canvas
 		}
 	}
 
+	undo()
+	{
+		if (this.rectangles.length > 0)
+		{
+			this.rectangles[0].clearLast(this.rectangles);
+		}
+	}
+
+	clearAll()
+	{
+		if (this.rectangles.length > 0)
+		{
+			this.rectangles[0].clearAll(this.rectangles);
+		}
+	}
+
 	addListeners()
 	{
 		this.element.addEventListener("mousedown", (e) =>
@@ -94,6 +110,21 @@ class Canvas
 				this.drag(e.offsetX, e.offsetY);
 			}
 		});
+
+		if (this.config.keyboardShortcuts)
+		{
+			window.addEventListener("keydown", (e) =>
+			{
+				if (e.key == "z" && e.ctrlKey)
+				{
+					this.undo();
+				}
+				if (e.key == "b" && e.ctrlKey)
+				{
+					this.clearAll();
+				}
+			});
+		}
 
 		new ResizeObserver((entries: ResizeObserverEntry[]) =>
 		{
@@ -132,10 +163,7 @@ class Canvas
 			{
 				clearBtn.addEventListener("click", () =>
 				{
-					if (this.rectangles.length > 0)
-					{
-						this.rectangles[0].clearAll(this.rectangles);
-					}
+					this.clearAll();
 				});
 			}
 		}
@@ -148,15 +176,11 @@ class Canvas
 			{
 				undoBtn.addEventListener("click", () =>
 				{
-					if (this.rectangles.length > 0)
-					{
-						this.rectangles[0].clearLast(this.rectangles);
-					}
+					this.undo();
 				});
 			}
 		}
 	}
-
 }
 
 export default Canvas;
