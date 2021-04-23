@@ -75,6 +75,8 @@ class Rectangle
 		rectangles[rectangles.length - 1].clear();
 		rectangles.pop();
 
+		this.redrawAll(rectangles);
+
 		return rectangles;
 	}
 
@@ -259,6 +261,14 @@ class Rectangle
 		console.log(`${identifier} X = ${this.fromX} => ${this.toX}, Y = ${this.fromY} => ${this.toY}, Width = ${this.width}, Height = ${this.height}`);
 	}
 
+	redrawAll(rectangles: Rectangle[]): Rectangle
+	{
+		this.clearAll(rectangles, false);
+		this.addAll(rectangles);
+
+		return this;
+	}
+
 
 	addToArray(rectangles: Rectangle[]): Rectangle[]
 	{
@@ -269,8 +279,7 @@ class Rectangle
 		)
 		{
 			// Clearing and adding again to avoid broken (cut) rectangles
-			this.clearAll(rectangles, false);
-			this.addAll(rectangles);
+			this.redrawAll(rectangles);
 		}
 		else
 		{
