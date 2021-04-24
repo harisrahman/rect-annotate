@@ -21,7 +21,7 @@ JS :
 new RectAnnotate("#myImage");
 ```
 
-### To use undo buttons
+### Use undo and clear buttons
 
 You will have to add the undo and clear 
 
@@ -39,6 +39,13 @@ By default undoRectAnnotate and clearRectAnnotate button ids are expected to be 
 	});
 ```
 
+### Keyboard shortcuts
+
+You can also use keyboard shortcuts : 
+
+`Undo` : `Ctrl+Z`
+
+`Clear` : `Ctrl+B`
 
 ## Configuration
 
