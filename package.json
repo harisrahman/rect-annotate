@@ -1,12 +1,15 @@
 {
+	"homepage": "https://harisrahman.github.io/rect-annotate/",
 	"name": "rect-annotate",
-	"version": "1.0.0",
+	"version": "0.1.0",
 	"scripts": {
 		"start": "npm run hot",
 		"dev": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js",
 		"watch": "npm run dev -- --watch",
 		"hot": "cross-env NODE_ENV=development webpack serve",
-		"prod": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js"
+		"prod": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js",
+		"predeploy": "npm run prod",
+		"deploy": "gh-pages -d dist"
 	},
 	"repository": {
 		"type": "git",
@@ -18,6 +21,7 @@
 		"cross-env": "^7.0.3",
 		"css-loader": "^5.2.4",
 		"file-loader": "^6.2.0",
+		"gh-pages": "^3.1.0",
 		"html-loader": "^2.1.2",
 		"html-webpack-plugin": "^5.3.1",
 		"mini-css-extract-plugin": "^1.5.0",
