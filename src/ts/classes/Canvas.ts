@@ -53,6 +53,9 @@ class Canvas
 		this.image.element.parentNode!.insertBefore(wrapper, this.image.element);
 		wrapper.appendChild(this.image.element);
 		wrapper.append(this.element);
+
+		this.element.style.top = Math.round(this.image.element.offsetTop) + "px";
+		this.element.style.left = Math.round(this.image.element.offsetLeft) + "px";
 	}
 
 	startPosition(X: number, Y: number)
