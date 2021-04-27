@@ -8,6 +8,7 @@ class Canvas
 	rectangles: Rectangle[];
 	mousedown: boolean = false;
 	current_rectangle?: Rectangle;
+	live?: HTMLImageElement;
 
 	constructor(public image: Image, private config: Config)
 	{
@@ -45,17 +46,23 @@ class Canvas
 	// Canvas is made of same dimensions as image and added body 
 	addCanvas()
 	{
-		this.element.width = Math.round(this.image.width);
-		this.element.height = Math.round(this.image.height);
-
 		const wrapper = document.createElement('div');
 		wrapper.className = "rect-annotate-wrapper";
 		this.image.element.parentNode!.insertBefore(wrapper, this.image.element);
 		wrapper.appendChild(this.image.element);
 		wrapper.append(this.element);
 
-		this.element.style.top = Math.round(this.image.element.offsetTop) + "px";
-		this.element.style.left = Math.round(this.image.element.offsetLeft) + "px";
+		this.updatePosAndDimensions();
+	}
+
+	updatePosAndDimensions()
+	{
+		this.image.updateDimensions();
+
+		this.element.width = Math.round(this.image.width);
+		this.element.height = Math.round(this.image.height);
+		this.element.style.top = Math.round(this.image.offsetY) + "px";
+		this.element.style.left = Math.round(this.image.offsetX) + "px";
 	}
 
 	startPosition(X: number, Y: number)
@@ -129,34 +136,18 @@ class Canvas
 			});
 		}
 
-		new ResizeObserver((entries: ResizeObserverEntry[]) =>
+
+		window.addEventListener("resize", () =>
 		{
-			const rect = entries[0].target.getBoundingClientRect()
+			const oldViewToRealRelativeSizeFactor: number = this.image.viewToRealRelativeSizeFactor;
 
-			const imgVpWidth: number = Math.round(rect.width);
-			const imgVpHeight: number = Math.round(rect.height);
-			let changed: boolean = false;
+			this.updatePosAndDimensions();
 
-			if (imgVpWidth != Math.round(this.element.width))
+			if (this.rectangles.length)
 			{
-				this.element.width = imgVpWidth;
-				changed = true;
-			}
-
-			if (imgVpHeight != Math.round(this.element.height))
-			{
-				this.element.height = imgVpHeight;
-				changed = true;
-			}
-
-			if (changed && Math.round(this.rectangles.length))
-			{
-				const oldViewToRealRelativeSizeFactor: number = this.image.viewToRealRelativeSizeFactor;
-				this.image.setRelativeSizeFactor();
-
 				this.rectangles[0].vpChanged(this.rectangles, oldViewToRealRelativeSizeFactor);
 			}
-		}).observe(this.image.element);
+		});
 
 		if (this.config.clearBtn)
 		{
