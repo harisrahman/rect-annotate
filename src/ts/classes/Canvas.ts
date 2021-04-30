@@ -9,10 +9,14 @@ class Canvas
 	mousedown: boolean = false;
 	current_rectangle?: Rectangle;
 	live?: HTMLImageElement;
+	screenHeight: number;
+	screenHeightReduceByInScrollThreshold: number = 100;
+	scrollByOnReachingThreshold: number = 100;
 
 	constructor(public image: Image, private config: Config)
 	{
 		this.element = document.createElement("canvas");
+		this.screenHeight = document.documentElement.clientHeight;
 		this.rectangles = [];
 
 		this.setup();
@@ -70,8 +74,10 @@ class Canvas
 		this.current_rectangle = new Rectangle(X, Y, X, Y, this, this.config);
 	}
 
-	drag(toX: number, toY: number)
+	drag(toX: number, toY: number, clientX: number, clientY: number)
 	{
+		if (this.screenHeight - this.screenHeightReduceByInScrollThreshold < clientY) this.doScroll();
+
 		this.current_rectangle!.updateTo(toX, toY);
 	}
 
@@ -99,6 +105,11 @@ class Canvas
 		}
 	}
 
+	doScroll()
+	{
+		window.scrollBy(0, this.scrollByOnReachingThreshold);
+	}
+
 	addListeners()
 	{
 		this.element.addEventListener("mousedown", (e) =>
@@ -117,7 +128,7 @@ class Canvas
 		{
 			if (this.mousedown)
 			{
-				this.drag(e.offsetX, e.offsetY);
+				this.drag(e.offsetX, e.offsetY, e.clientX, e.clientY);
 			}
 		});
 
@@ -139,6 +150,7 @@ class Canvas
 
 		window.addEventListener("resize", () =>
 		{
+			this.screenHeight = document.documentElement.clientHeight;
 			const oldViewToRealRelativeSizeFactor: number = this.image.viewToRealRelativeSizeFactor;
 
 			this.updatePosAndDimensions();
