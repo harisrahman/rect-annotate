@@ -107,7 +107,25 @@ class Canvas
 
 	doScroll()
 	{
-		window.scrollBy(0, this.scrollByOnReachingThreshold);
+		let scrollElement;
+
+		if (document.body.scrollHeight > document.body.clientHeight)
+		{
+			scrollElement = document.body;
+		}
+		else if (document.documentElement.scrollHeight > document.documentElement.clientHeight)
+		{
+			scrollElement = document.documentElement;
+		}
+
+		if (scrollElement)
+		{
+			scrollElement.scrollBy(0, this.scrollByOnReachingThreshold);
+		}
+		else
+		{
+			window.scrollBy(0, this.scrollByOnReachingThreshold);
+		}
 	}
 
 	addListeners()
