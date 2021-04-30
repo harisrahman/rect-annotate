@@ -273,19 +273,20 @@ class Rectangle
 	addToArray(rectangles: Rectangle[]): Rectangle[]
 	{
 		// If smaller than minimum or rectangle overlaps then don't add/draw
-		if (Math.abs(this.width) < this.config.minHeight ||
-			Math.abs(this.height) < this.config.minWidth ||
-			(rectangles.length > 0 && this.hasOverlap(rectangles))
+		if (!
+			(
+				Math.abs(this.width) < this.config.minHeight ||
+				Math.abs(this.height) < this.config.minWidth ||
+				(rectangles.length > 0 && this.hasOverlap(rectangles))
+			)
 		)
-		{
-			// Clearing and adding again to avoid broken (cut) rectangles
-			this.redrawAll(rectangles);
-		}
-		else
 		{
 			rectangles.push(this);
 			this.addToForm(rectangles.length - 1);
 		}
+
+		// Clearing and adding again to avoid broken (cut) rectangles
+		this.redrawAll(rectangles);
 
 		return rectangles;
 	}
