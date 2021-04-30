@@ -109,13 +109,13 @@ class Canvas
 	{
 		let scrollElement;
 
-		if (document.body.scrollHeight > document.body.clientHeight)
-		{
-			scrollElement = document.body;
-		}
-		else if (document.documentElement.scrollHeight > document.documentElement.clientHeight)
+		if (document.documentElement.scrollHeight > document.documentElement.clientHeight)
 		{
 			scrollElement = document.documentElement;
+		}
+		else if (document.body.scrollHeight > document.body.clientHeight)
+		{
+			scrollElement = document.body;
 		}
 
 		if (scrollElement)
