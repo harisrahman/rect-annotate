@@ -35,7 +35,18 @@ module.exports = {
 					keep_classnames: false
 				},
 			}),
-		]
+		],
+		splitChunks: {
+			cacheGroups: {
+				app: {
+					name: 'rect-annotate',
+					type: 'css/mini-extract',
+					test: /app\.s?css$/,
+					chunks: 'all',
+					enforce: true,
+				}
+			},
+		},
 	},
 	plugins: [
 		new HtmlWebpackPlugin({
@@ -46,7 +57,12 @@ module.exports = {
 			minify: !devMode
 		}),
 		new MiniCssExtractPlugin({
-			filename: 'css/rect-annotate.css',
+			filename: ({ chunk }) =>
+			{
+				const name = chunk.name == "main" ? "demo" : chunk.name;
+
+				return `css/${name}.css`;
+			},
 		}),
 		new webpack.HotModuleReplacementPlugin(),
 		new CleanWebpackPlugin({
