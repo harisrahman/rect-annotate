@@ -1,5 +1,6 @@
 import Image from "./Image";
 import Rectangle from "./Rectangle";
+import ElasticScroll from "./ElasticScroll";
 import { Config } from "../interfaces/Config";
 
 class Canvas
@@ -9,14 +10,11 @@ class Canvas
 	mousedown: boolean = false;
 	current_rectangle?: Rectangle;
 	live?: HTMLImageElement;
-	screenHeight: number;
-	screenHeightReduceByInScrollThreshold: number = 100;
-	scrollByOnReachingThreshold: number = 100;
+	scroll?: ElasticScroll;
 
 	constructor(public image: Image, private config: Config)
 	{
 		this.element = document.createElement("canvas");
-		this.screenHeight = document.documentElement.clientHeight;
 		this.rectangles = [];
 
 		this.setup();
@@ -72,13 +70,26 @@ class Canvas
 	startPosition(X: number, Y: number)
 	{
 		this.current_rectangle = new Rectangle(X, Y, X, Y, this, this.config);
+
+		if (this.scroll === undefined)
+		{
+			this.scroll = new ElasticScroll(this.current_rectangle);
+		}
+		else
+		{
+			this.scroll.setRectangle(this.current_rectangle);
+		}
 	}
 
 	drag(toX: number, toY: number, clientX: number, clientY: number)
 	{
-		if (this.screenHeight - this.screenHeightReduceByInScrollThreshold < clientY) this.doScroll();
+		const cr = this.current_rectangle as Rectangle;
 
-		this.current_rectangle!.updateTo(toX, toY);
+		if (cr.toX !== toX || cr.toY !== toY)
+		{
+			this.scroll!.scrollIfNeeded(clientX, clientY);
+			cr.updateTo(toX, toY);
+		}
 	}
 
 	endPosition(X: number, Y: number)
@@ -102,29 +113,6 @@ class Canvas
 		if (this.rectangles.length > 0)
 		{
 			this.rectangles[0].clearAll(this.rectangles);
-		}
-	}
-
-	doScroll()
-	{
-		let scrollElement;
-
-		if (document.documentElement.scrollHeight > document.documentElement.clientHeight)
-		{
-			scrollElement = document.documentElement;
-		}
-		else if (document.body.scrollHeight > document.body.clientHeight)
-		{
-			scrollElement = document.body;
-		}
-
-		if (scrollElement)
-		{
-			scrollElement.scrollBy(0, this.scrollByOnReachingThreshold);
-		}
-		else
-		{
-			window.scrollBy(0, this.scrollByOnReachingThreshold);
 		}
 	}
 
@@ -168,7 +156,6 @@ class Canvas
 
 		window.addEventListener("resize", () =>
 		{
-			this.screenHeight = document.documentElement.clientHeight;
 			const oldViewToRealRelativeSizeFactor: number = this.image.viewToRealRelativeSizeFactor;
 
 			this.updatePosAndDimensions();

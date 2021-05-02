@@ -5,6 +5,8 @@ class Rectangle
 {
 	public height!: number;
 	public width!: number;
+	public drawingFromTopToBottom?: boolean;
+	public drawingFromLeftToRight?: boolean;
 	private ctx: CanvasRenderingContext2D;
 	private form?: HTMLFormElement;
 	private coordTypes = ["fromX", "fromY", "toX", "toY", "width", "height"] as const;
@@ -63,6 +65,8 @@ class Rectangle
 	{
 		this.width = (this.toX - this.fromX);
 		this.height = (this.toY - this.fromY);
+		this.drawingFromTopToBottom = this.height > 0;
+		this.drawingFromLeftToRight = this.width > 0;
 
 		return this;
 	}
