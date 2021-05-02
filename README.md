@@ -2,7 +2,9 @@
 
 Annotate images by drawing rectangles on it. Coordinates of drawn reactangles can also be added to a form whose values can be sent to a server to save to a database for use later use (redrawing another time) or doing some operations on annotated parts of the image. eg. cropping, etc.
 
-[See Demo](https://harisrahman.github.io/rect-annotate/)
+![Preview GIF](./demo.gif)
+
+[See Live Demo](https://harisrahman.github.io/rect-annotate/)
 
 ## Usage
 
